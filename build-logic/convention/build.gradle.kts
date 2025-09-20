@@ -45,5 +45,9 @@ gradlePlugin {
             id = "com.deeromptech.convention.cmp.application"
             implementationClass = "CmpApplicationConventionPlugin"
         }
+        register("kmpLibrary") {
+            id = "com.deeromptech.convention.kmp.library"
+            implementationClass = "KmpLibraryConventionPlugin"
+        }
     }
 }
