@@ -11,6 +11,9 @@ dependencies {
     compileOnly(libs.android.tools.common)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.compose.gradlePlugin)
+    compileOnly(libs.androidx.room.gradle.plugin)
+    implementation(libs.buildkonfig.gradlePlugin)
+    implementation(libs.buildkonfig.compiler)
 }
 
 java {
@@ -40,6 +43,30 @@ gradlePlugin {
         register("androidComposeApplication") {
             id = "com.deeromptech.convention.android.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
+        }
+        register("cmpApplication") {
+            id = "com.deeromptech.convention.cmp.application"
+            implementationClass = "CmpApplicationConventionPlugin"
+        }
+        register("kmpLibrary") {
+            id = "com.deeromptech.convention.kmp.library"
+            implementationClass = "KmpLibraryConventionPlugin"
+        }
+        register("cmpLibrary") {
+            id = "com.deeromptech.convention.cmp.library"
+            implementationClass = "CmpLibraryConventionPlugin"
+        }
+        register("cmpFeature") {
+            id = "com.deeromptech.convention.cmp.feature"
+            implementationClass = "CmpFeatureConventionPlugin"
+        }
+        register("buildKonfig") {
+            id = "com.deeromptech.convention.buildkonfig"
+            implementationClass = "BuildKonfigConventionPlugin"
+        }
+        register("room") {
+            id = "com.deeromptech.convention.room"
+            implementationClass = "RoomConventionPlugin"
         }
     }
 }
