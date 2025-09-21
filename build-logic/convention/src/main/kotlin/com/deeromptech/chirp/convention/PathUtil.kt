@@ -8,7 +8,7 @@ fun Project.pathToPackageName(): String {
         .replace(':', '.')
         .lowercase()
 
-    return "com.deeromptech$relativePackageName"
+    return "com.plcoding$relativePackageName"
 }
 
 fun Project.pathToResourcePrefix(): String {
