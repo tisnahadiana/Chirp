@@ -1,7 +1,7 @@
 package com.deeromptech.chirp
 
 import androidx.compose.runtime.Composable
-import com.deeromptech.auth.presentation.register_success.RegisterSuccessRoot
+import com.deeromptech.chirp.navigation.NavigationRoot
 import com.deeromptech.core.designsystem.theme.ChirpTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -9,8 +9,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
     ChirpTheme {
-        RegisterSuccessRoot(
-
-        )
+        NavigationRoot()
     }
 }
