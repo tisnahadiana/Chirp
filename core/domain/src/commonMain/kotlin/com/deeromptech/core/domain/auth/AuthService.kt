@@ -2,8 +2,14 @@ package com.deeromptech.core.domain.auth
 
 import com.deeromptech.core.domain.util.DataError
 import com.deeromptech.core.domain.util.EmptyResult
+import com.deeromptech.core.domain.util.Result
 
 interface AuthService {
+    suspend fun login(
+        email: String,
+        password: String
+    ): Result<AuthInfo, DataError.Remote>
+
     suspend fun register(
         email: String,
         username: String,

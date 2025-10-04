@@ -28,7 +28,8 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun RegisterSuccessRoot(
-    viewModel: RegisterSuccessViewModel = koinViewModel()
+    viewModel: RegisterSuccessViewModel = koinViewModel(),
+    onLoginClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 

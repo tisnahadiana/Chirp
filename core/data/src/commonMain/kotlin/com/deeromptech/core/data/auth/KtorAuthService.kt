@@ -1,17 +1,38 @@
 package com.deeromptech.core.data.auth
 
+import com.deeromptech.core.data.dto.AuthInfoSerializable
 import com.deeromptech.core.data.dto.requests.EmailRequest
+import com.deeromptech.core.data.dto.requests.LoginRequest
 import com.deeromptech.core.data.dto.requests.RegisterRequest
+import com.deeromptech.core.data.mappers.toDomain
 import com.deeromptech.core.data.networking.get
 import com.deeromptech.core.data.networking.post
+import com.deeromptech.core.domain.auth.AuthInfo
 import com.deeromptech.core.domain.auth.AuthService
 import com.deeromptech.core.domain.util.DataError
 import com.deeromptech.core.domain.util.EmptyResult
+import com.deeromptech.core.domain.util.Result
+import com.deeromptech.core.domain.util.map
 import io.ktor.client.HttpClient
 
 class KtorAuthService(
     private val httpClient: HttpClient
 ): AuthService {
+
+    override suspend fun login(
+        email: String,
+        password: String
+    ): Result<AuthInfo, DataError.Remote> {
+        return httpClient.post<LoginRequest, AuthInfoSerializable>(
+            route = "/auth/login",
+            body = LoginRequest(
+                email = email,
+                password = password
+            )
+        ).map { authInfoSerializable ->
+            authInfoSerializable.toDomain()
+        }
+    }
 
     override suspend fun register(
         email: String,
