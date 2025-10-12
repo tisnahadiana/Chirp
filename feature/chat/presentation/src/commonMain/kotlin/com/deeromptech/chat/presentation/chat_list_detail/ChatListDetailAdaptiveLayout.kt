@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalComposeUiApi::class)
+
 package com.deeromptech.chat.presentation.chat_list_detail
 
 import androidx.compose.foundation.background
@@ -22,11 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.deeromptech.chat.presentation.create_chat.CreateChatRoot
 import com.deeromptech.core.designsystem.theme.extended
+import com.deeromptech.core.presentation.util.DialogSheetScopedViewModel
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun ChatListDetailAdaptiveLayout(
     chatListDetailViewModel: ChatListDetailViewModel = koinViewModel()
@@ -60,6 +63,7 @@ fun ChatListDetailAdaptiveLayout(
                             text = "Chat $chatIndex",
                             modifier = Modifier
                                 .clickable {
+                                    chatListDetailViewModel.onAction(ChatListDetailAction.OnCreateChatClick)
                                     chatListDetailViewModel.onAction(ChatListDetailAction.OnChatClick(chatIndex.toString()))
                                     scope.launch {
                                         scaffoldNavigator.navigateTo(
@@ -89,4 +93,10 @@ fun ChatListDetailAdaptiveLayout(
             }
         }
     )
+
+    DialogSheetScopedViewModel(
+        visible = sharedState.dialogState is DialogState.CreateChat
+    ) {
+        CreateChatRoot()
+    }
 }
