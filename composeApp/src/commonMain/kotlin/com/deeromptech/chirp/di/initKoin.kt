@@ -1,6 +1,7 @@
 package com.deeromptech.chirp.di
 
 import com.deeromptech.auth.presentation.di.authPresentationModule
+import com.deeromptech.chat.data.di.chatDataModule
 import com.deeromptech.chat.presentation.di.chatPresentationModule
 import com.deeromptech.core.data.di.coreDataModule
 import com.deeromptech.core.presentation.di.corePresentationModule
@@ -15,7 +16,8 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             authPresentationModule,
             appModule,
             chatPresentationModule,
-            corePresentationModule
+            corePresentationModule,
+            chatDataModule
         )
     }
 }
