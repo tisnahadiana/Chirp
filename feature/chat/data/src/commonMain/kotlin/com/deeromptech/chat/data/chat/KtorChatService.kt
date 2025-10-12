@@ -1,0 +1,26 @@
+package com.deeromptech.chat.data.chat
+
+import com.deeromptech.chat.data.dto.ChatDto
+import com.deeromptech.chat.data.dto.request.CreateChatRequest
+import com.deeromptech.chat.data.mappers.toDomain
+import com.deeromptech.chat.domain.chat.ChatService
+import com.deeromptech.chat.domain.models.Chat
+import com.deeromptech.core.data.networking.post
+import com.deeromptech.core.domain.util.DataError
+import com.deeromptech.core.domain.util.Result
+import com.deeromptech.core.domain.util.map
+import io.ktor.client.HttpClient
+
+class KtorChatService(
+    private val httpClient: HttpClient
+): ChatService {
+
+    override suspend fun createChat(otherUserIds: List<String>): Result<Chat, DataError.Remote> {
+        return httpClient.post<CreateChatRequest, ChatDto>(
+            route = "/chat",
+            body = CreateChatRequest(
+                otherUserIds = otherUserIds
+            )
+        ).map { it.toDomain() }
+    }
+}
