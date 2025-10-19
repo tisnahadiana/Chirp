@@ -1,0 +1,14 @@
+package com.deeromptech.chat.presentation.chat_list
+
+import com.deeromptech.chat.presentation.model.ChatUi
+
+sealed interface ChatListAction {
+    data object OnUserAvatarClick: ChatListAction
+    data object OnDismissUserMenu: ChatListAction
+    data object OnLogoutClick: ChatListAction
+    data object OnConfirmLogout: ChatListAction
+    data object OnDismissLogoutDialog: ChatListAction
+    data object OnCreateChatClick: ChatListAction
+    data object OnProfileSettingsClick: ChatListAction
+    data class OnChatClick(val chat: ChatUi): ChatListAction
+}
