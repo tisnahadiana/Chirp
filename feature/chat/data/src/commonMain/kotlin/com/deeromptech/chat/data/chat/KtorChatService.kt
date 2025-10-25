@@ -5,6 +5,7 @@ import com.deeromptech.chat.data.dto.request.CreateChatRequest
 import com.deeromptech.chat.data.mappers.toDomain
 import com.deeromptech.chat.domain.chat.ChatService
 import com.deeromptech.chat.domain.models.Chat
+import com.deeromptech.core.data.networking.get
 import com.deeromptech.core.data.networking.post
 import com.deeromptech.core.domain.util.DataError
 import com.deeromptech.core.domain.util.Result
@@ -22,5 +23,13 @@ class KtorChatService(
                 otherUserIds = otherUserIds
             )
         ).map { it.toDomain() }
+    }
+
+    override suspend fun getChats(): Result<List<Chat>, DataError.Remote> {
+        return httpClient.get<List<ChatDto>>(
+            route = "/chat"
+        ).map { chatDtos ->
+            chatDtos.map { it.toDomain() }
+        }
     }
 }
