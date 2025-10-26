@@ -1,11 +1,12 @@
-package com.deeromptech.chat.presentation.create_chat
+package com.deeromptech.chat.presentation.components.manage_chat
 
 import androidx.compose.foundation.text.input.TextFieldState
 import com.deeromptech.core.designsystem.components.avatar.ChatParticipantUi
 import com.deeromptech.core.presentation.util.UiText
 
-data class CreateChatState(
+data class ManageChatState(
     val queryTextState: TextFieldState = TextFieldState(),
+    val existingChatParticipants: List<ChatParticipantUi> = emptyList(),
     val selectedChatParticipants: List<ChatParticipantUi> = emptyList(),
     val isSearching: Boolean = false,
     val canAddParticipant: Boolean = false,
