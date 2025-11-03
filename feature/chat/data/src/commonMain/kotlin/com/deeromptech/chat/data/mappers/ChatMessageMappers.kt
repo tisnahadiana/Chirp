@@ -1,6 +1,7 @@
 package com.deeromptech.chat.data.mappers
 
 import com.deeromptech.chat.data.dto.ChatMessageDto
+import com.deeromptech.chat.data.dto.websocket.OutgoingWebSocketDto
 import com.deeromptech.chat.database.entities.ChatMessageEntity
 import com.deeromptech.chat.database.view.LastMessageView
 import com.deeromptech.chat.domain.models.ChatMessage
@@ -59,5 +60,13 @@ fun ChatMessage.toLastMessageView(): LastMessageView {
         content = content,
         timestamp = createdAt.toEpochMilliseconds(),
         deliveryStatus = deliveryStatus.name
+    )
+}
+
+fun ChatMessage.toNewMessage(): OutgoingWebSocketDto.NewMessage {
+    return OutgoingWebSocketDto.NewMessage(
+        messageId = id,
+        chatId = chatId,
+        content = content,
     )
 }
