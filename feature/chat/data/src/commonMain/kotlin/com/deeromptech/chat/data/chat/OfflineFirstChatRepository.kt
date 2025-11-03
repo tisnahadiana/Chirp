@@ -1,6 +1,5 @@
 package com.deeromptech.chat.data.chat
 
-import com.deeromptech.chat.data.lifecycle.AppLifecycleObserver
 import com.deeromptech.chat.data.mappers.toDomain
 import com.deeromptech.chat.data.mappers.toEntity
 import com.deeromptech.chat.data.mappers.toLastMessageView
@@ -39,7 +38,8 @@ class OfflineFirstChatRepository(
     init {
         observer.isConnected.onEach { isConnected ->
             println("Is app connected? $isConnected")
-        }.launchIn(GlobalScope)
+        }
+            .launchIn(GlobalScope)
     }
 
     override fun getChats(): Flow<List<Chat>> {
