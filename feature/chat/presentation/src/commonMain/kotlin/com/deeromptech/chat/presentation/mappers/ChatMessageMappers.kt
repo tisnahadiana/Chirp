@@ -3,11 +3,21 @@ package com.deeromptech.chat.presentation.mappers
 import com.deeromptech.chat.domain.models.MessageWithSender
 import com.deeromptech.chat.presentation.model.MessageUi
 import com.deeromptech.chat.presentation.util.DateUtils
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 fun List<MessageWithSender>.toUiList(localUserId: String): List<MessageUi> {
     return this
         .sortedByDescending { it.message.createdAt }
-        .map { it.toUi(localUserId) }
+        .groupBy {
+            it.message.createdAt.toLocalDateTime(TimeZone.currentSystemDefault()).date
+        }
+        .flatMap { (date, messages) ->
+            messages.map { it.toUi(localUserId) } + MessageUi.DateSeparator(
+                id = date.toString(),
+                date = DateUtils.formatDateSeparator(date)
+            )
+        }
 }
 
 fun MessageWithSender.toUi(
