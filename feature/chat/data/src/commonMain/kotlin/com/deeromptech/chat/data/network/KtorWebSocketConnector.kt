@@ -4,11 +4,11 @@ package com.deeromptech.chat.data.network
 
 import com.deeromptech.chat.data.dto.websocket.WebSocketMessageDto
 import com.deeromptech.chat.data.lifecycle.AppLifecycleObserver
-import com.deeromptech.chat.domain.error.ConnectionError
 import com.deeromptech.chat.domain.models.ConnectionState
 import com.deeromptech.core.data.networking.UrlConstants
 import com.deeromptech.core.domain.auth.SessionStorage
 import com.deeromptech.core.domain.logging.ChirpLogger
+import com.deeromptech.core.domain.util.DataError
 import com.deeromptech.core.domain.util.EmptyResult
 import com.deeromptech.core.domain.util.Result
 import com.deeromptech.feature.chat.data.BuildKonfig
@@ -213,11 +213,11 @@ class KtorWebSocketConnector(
         }
     }
 
-    suspend fun sendMessage(message: String): EmptyResult<ConnectionError> {
+    suspend fun sendMessage(message: String): EmptyResult<DataError.Connection> {
         val connectionState = connectionState.value
 
         if(currentSession == null || connectionState != ConnectionState.CONNECTED) {
-            return Result.Failure(ConnectionError.NOT_CONNECTED)
+            return Result.Failure(DataError.Connection.NOT_CONNECTED)
         }
 
         return try {
@@ -226,7 +226,7 @@ class KtorWebSocketConnector(
         } catch(e: Exception) {
             coroutineContext.ensureActive()
             logger.error("Unable to send WebSocket message", e)
-            Result.Failure(ConnectionError.MESSAGE_SEND_FAILED)
+            Result.Failure(DataError.Connection.MESSAGE_SEND_FAILED)
         }
     }
 }
