@@ -12,6 +12,7 @@ import com.deeromptech.chat.domain.message.MessageRepository
 import com.deeromptech.chat.domain.models.ConnectionState
 import com.deeromptech.chat.domain.models.OutgoingNewMessage
 import com.deeromptech.chat.presentation.mappers.toUi
+import com.deeromptech.chat.presentation.model.MessageUi
 import com.deeromptech.core.domain.auth.SessionStorage
 import com.deeromptech.core.domain.util.onFailure
 import com.deeromptech.core.domain.util.onSuccess
@@ -52,7 +53,7 @@ class ChatDetailViewModel(
 
     private val chatInfoFlow = _chatId
         .flatMapLatest { chatId ->
-            if(chatId != null) {
+            if (chatId != null) {
                 chatRepository.getChatInfoById(chatId)
             } else emptyFlow()
         }
@@ -71,18 +72,19 @@ class ChatDetailViewModel(
         chatInfoFlow,
         sessionStorage.observeAuthInfo()
     ) { currentState, chatInfo, authInfo ->
-        if(authInfo == null) {
+        if (authInfo == null) {
             return@combine ChatDetailState()
         }
 
         currentState.copy(
-            chatUi = chatInfo.chat.toUi(authInfo.user.id)
+            chatUi = chatInfo.chat.toUi(authInfo.user.id),
+            messages = chatInfo.messages.map { it.toUi(authInfo.user.id) }
         )
     }
 
     val state = _chatId
         .flatMapLatest { chatId ->
-            if(chatId != null) {
+            if (chatId != null) {
                 stateWithMessages
             } else {
                 _state
@@ -108,22 +110,54 @@ class ChatDetailViewModel(
             ChatDetailAction.OnBackClick -> {}
             ChatDetailAction.OnChatMembersClick -> {}
             ChatDetailAction.OnChatOptionsClick -> onChatOptionsClick()
-            is ChatDetailAction.OnDeleteMessageClick -> {}
+            is ChatDetailAction.OnDeleteMessageClick -> deleteMessage(action.message)
             ChatDetailAction.OnDismissChatOptions -> onDismissChatOptions()
-            ChatDetailAction.OnDismissMessageMenu -> {}
+            ChatDetailAction.OnDismissMessageMenu -> onDismissMessageMenu()
             ChatDetailAction.OnLeaveChatClick -> onLeaveChatClick()
-            is ChatDetailAction.OnMessageLongClick -> {}
-            is ChatDetailAction.OnRetryClick -> {}
+            is ChatDetailAction.OnMessageLongClick -> onMessageLongClick(action.message)
+            is ChatDetailAction.OnRetryClick -> retryMessage(action.message)
             ChatDetailAction.OnScrollToTop -> {}
             ChatDetailAction.OnSendMessageClick -> sendMessage()
             else -> Unit
         }
     }
 
+    private fun onDismissMessageMenu() {
+        _state.update { it.copy(
+            messageWithOpenMenu = null
+        ) }
+    }
+
+    private fun onMessageLongClick(message: MessageUi.LocalUserMessage) {
+        _state.update { it.copy(
+            messageWithOpenMenu = message
+        ) }
+    }
+
+    private fun deleteMessage(message: MessageUi.LocalUserMessage) {
+        viewModelScope.launch {
+            messageRepository
+                .deleteMessage(message.id)
+                .onFailure { error ->
+                    eventChannel.send(ChatDetailEvent.OnError(error.toUiText()))
+                }
+        }
+    }
+
+    private fun retryMessage(message: MessageUi.LocalUserMessage) {
+        viewModelScope.launch {
+            messageRepository
+                .retryMessage(message.id)
+                .onFailure { error ->
+                    eventChannel.send(ChatDetailEvent.OnError(error.toUiText()))
+                }
+        }
+    }
+
     private fun sendMessage() {
         val currentChatId = _chatId.value
         val content = state.value.messageTextFieldState.text.toString().trim()
-        if(content.isBlank() || currentChatId == null) {
+        if (content.isBlank() || currentChatId == null) {
             return
         }
 
@@ -133,6 +167,7 @@ class ChatDetailViewModel(
                 messageId = Uuid.random().toString(),
                 content = content
             )
+            println("Message ID sent: ${message.messageId}")
 
             messageRepository
                 .sendMessage(message)
@@ -147,9 +182,11 @@ class ChatDetailViewModel(
 
     private fun observeCanSendMessage() {
         canSendMessage.onEach { canSend ->
-            _state.update { it.copy(
-                canSendMessage = canSend
-            ) }
+            _state.update {
+                it.copy(
+                    canSendMessage = canSend
+                )
+            }
         }.launchIn(viewModelScope)
     }
 
@@ -159,19 +196,10 @@ class ChatDetailViewModel(
             .distinctUntilChanged()
 
         val newMessages = _chatId.flatMapLatest { chatId ->
-            if(chatId != null) {
+            if (chatId != null) {
                 messageRepository.getMessagesForChat(chatId)
             } else emptyFlow()
         }
-            .combine(sessionStorage.observeAuthInfo()) { messages, authInfo ->
-                if(authInfo == null) {
-                    return@combine messages
-                }
-                _state.update { it.copy(
-                    messages = messages.map { it.toUi(authInfo.user.id) }
-                ) }
-                messages
-            }
 
         val isNearBottom = state.map { it.isNearBottom }.distinctUntilChanged()
 
@@ -183,7 +211,7 @@ class ChatDetailViewModel(
             val lastNewId = newMessages.lastOrNull()?.message?.id
             val lastCurrentId = currentMessages.lastOrNull()?.id
 
-            if(lastNewId != lastCurrentId && isNearBottom) {
+            if (lastNewId != lastCurrentId && isNearBottom) {
                 eventChannel.send(ChatDetailEvent.OnNewMessage)
             }
         }.launchIn(viewModelScope)
@@ -193,15 +221,17 @@ class ChatDetailViewModel(
         connectionClient
             .connectionState
             .onEach { connectionState ->
-                if(connectionState == ConnectionState.CONNECTED) {
+                if (connectionState == ConnectionState.CONNECTED) {
                     _chatId.value?.let {
                         messageRepository.fetchMessages(it, before = null)
                     }
                 }
 
-                _state.update { it.copy(
-                    connectionState = connectionState
-                ) }
+                _state.update {
+                    it.copy(
+                        connectionState = connectionState
+                    )
+                }
             }
             .launchIn(viewModelScope)
     }
@@ -209,9 +239,11 @@ class ChatDetailViewModel(
     private fun onLeaveChatClick() {
         val chatId = _chatId.value ?: return
 
-        _state.update { it.copy(
-            isChatOptionsOpen = false
-        ) }
+        _state.update {
+            it.copy(
+                isChatOptionsOpen = false
+            )
+        }
 
         viewModelScope.launch {
             chatRepository
@@ -220,11 +252,13 @@ class ChatDetailViewModel(
                     _state.value.messageTextFieldState.clearText()
 
                     _chatId.update { null }
-                    _state.update { it.copy(
-                        chatUi = null,
-                        messages = emptyList(),
-                        bannerState = BannerState()
-                    ) }
+                    _state.update {
+                        it.copy(
+                            chatUi = null,
+                            messages = emptyList(),
+                            bannerState = BannerState()
+                        )
+                    }
                 }
                 .onFailure { error ->
                     eventChannel.send(
@@ -237,15 +271,19 @@ class ChatDetailViewModel(
     }
 
     private fun onDismissChatOptions() {
-        _state.update { it.copy(
-            isChatOptionsOpen = false
-        ) }
+        _state.update {
+            it.copy(
+                isChatOptionsOpen = false
+            )
+        }
     }
 
     private fun onChatOptionsClick() {
-        _state.update { it.copy(
-            isChatOptionsOpen = true
-        ) }
+        _state.update {
+            it.copy(
+                isChatOptionsOpen = true
+            )
+        }
     }
 
     private fun switchChat(chatId: String?) {
