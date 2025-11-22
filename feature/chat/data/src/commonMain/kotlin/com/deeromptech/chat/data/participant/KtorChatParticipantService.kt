@@ -1,8 +1,8 @@
-package com.deeromptech.chat.data.chat
+package com.deeromptech.chat.data.participant
 
 import com.deeromptech.chat.data.dto.ChatParticipantDto
 import com.deeromptech.chat.data.mappers.toDomain
-import com.deeromptech.chat.domain.chat.ChatParticipantService
+import com.deeromptech.chat.domain.participant.ChatParticipantService
 import com.deeromptech.chat.domain.models.ChatParticipant
 import com.deeromptech.core.data.networking.get
 import com.deeromptech.core.domain.util.DataError
@@ -20,6 +20,12 @@ class KtorChatParticipantService(
             queryParams = mapOf(
                 "query" to query
             )
+        ).map { it.toDomain() }
+    }
+
+    override suspend fun getLocalParticipant(): Result<ChatParticipant, DataError.Remote> {
+        return httpClient.get<ChatParticipantDto>(
+            route = "/participants"
         ).map { it.toDomain() }
     }
 }
