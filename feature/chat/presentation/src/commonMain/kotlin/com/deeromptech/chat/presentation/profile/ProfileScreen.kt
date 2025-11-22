@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -43,6 +45,7 @@ import chirp.feature.chat.presentation.generated.resources.upload_icon
 import chirp.feature.chat.presentation.generated.resources.upload_image
 import com.deeromptech.chat.presentation.profile.components.ProfileHeaderSection
 import com.deeromptech.chat.presentation.profile.components.ProfileSectionLayout
+import com.deeromptech.chat.presentation.profile.mediapicker.rememberImagePickerLauncher
 import com.deeromptech.core.designsystem.components.avatar.AvatarSize
 import com.deeromptech.core.designsystem.components.avatar.ChirpAvatarPhoto
 import com.deeromptech.core.designsystem.components.brand.ChirpHorizontalDivider
@@ -69,6 +72,13 @@ fun ProfileRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    val launcher = rememberImagePickerLauncher { pickedImageData ->
+        viewModel.onAction(ProfileAction.OnPictureSelected(
+            pickedImageData.bytes,
+            pickedImageData.mimeType
+        ))
+    }
+
     ChirpAdaptiveDialogSheetLayout(
         onDismiss = onDismiss
     ) {
@@ -77,6 +87,9 @@ fun ProfileRoot(
             onAction = { action ->
                 when(action) {
                     is ProfileAction.OnDismiss -> onDismiss()
+                    is ProfileAction.OnUploadPictureClick -> {
+                        launcher.launch()
+                    }
                     else -> Unit
                 }
                 viewModel.onAction(action)
