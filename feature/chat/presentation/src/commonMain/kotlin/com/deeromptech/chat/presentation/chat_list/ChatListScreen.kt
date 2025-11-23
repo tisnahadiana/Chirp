@@ -42,6 +42,8 @@ import com.deeromptech.core.designsystem.components.buttons.ChirpFloatingActionB
 import com.deeromptech.core.designsystem.components.dialogs.DestructiveConfirmationDialog
 import com.deeromptech.core.designsystem.theme.ChirpTheme
 import com.deeromptech.core.designsystem.theme.extended
+import com.deeromptech.core.presentation.permissions.Permission
+import com.deeromptech.core.presentation.permissions.rememberPermissionController
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -85,6 +87,11 @@ fun ChatListScreen(
     onAction: (ChatListAction) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
+    val permissionController = rememberPermissionController()
+    LaunchedEffect(true) {
+        permissionController.requestPermission(Permission.NOTIFICATIONS)
+    }
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
