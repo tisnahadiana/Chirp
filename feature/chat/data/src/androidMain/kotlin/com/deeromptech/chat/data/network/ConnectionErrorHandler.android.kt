@@ -19,6 +19,7 @@ actual class ConnectionErrorHandler {
             is UnknownHostException,
             is SSLException,
             is EOFException -> ConnectionState.ERROR_NETWORK
+
             else -> ConnectionState.ERROR_UNKNOWN
         }
     }
@@ -28,11 +29,13 @@ actual class ConnectionErrorHandler {
     }
 
     actual fun isRetriableError(cause: Throwable): Boolean {
-        return when(cause) {
+        return when (cause) {
             is SocketTimeoutException,
             is WebSocketException,
             is SocketException,
+            is UnknownHostException,
             is EOFException -> true
+
             else -> false
         }
     }
