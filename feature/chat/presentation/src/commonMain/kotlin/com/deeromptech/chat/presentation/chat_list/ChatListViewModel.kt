@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.deeromptech.chat.domain.chat.ChatRepository
 import com.deeromptech.chat.domain.notification.DeviceTokenService
+import com.deeromptech.chat.domain.participant.ChatParticipantRepository
 import com.deeromptech.chat.presentation.mappers.toUi
 import com.deeromptech.core.domain.auth.AuthService
 import com.deeromptech.core.domain.auth.SessionStorage
@@ -11,7 +12,6 @@ import com.deeromptech.core.domain.util.onFailure
 import com.deeromptech.core.domain.util.onSuccess
 import com.deeromptech.core.presentation.util.toUiText
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -26,7 +26,8 @@ class ChatListViewModel(
     private val repository: ChatRepository,
     private val sessionStorage: SessionStorage,
     private val deviceTokenService: DeviceTokenService,
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val chatParticipantRepository: ChatParticipantRepository
 ) : ViewModel() {
 
     private val eventChannel = Channel<ChatListEvent>()
@@ -52,6 +53,7 @@ class ChatListViewModel(
         .onStart {
             if (!hasLoadedInitialData) {
                 loadChats()
+                fetchLocalUserProfile()
                 hasLoadedInitialData = true
             }
         }
@@ -87,6 +89,13 @@ class ChatListViewModel(
                 ) }
             }
             else -> Unit
+        }
+    }
+
+    private fun fetchLocalUserProfile() {
+        viewModelScope.launch {
+            chatParticipantRepository
+                .fetchLocalParticipant()
         }
     }
 
