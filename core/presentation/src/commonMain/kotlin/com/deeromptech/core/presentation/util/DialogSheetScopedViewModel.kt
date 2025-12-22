@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package com.deeromptech.core.presentation.util
 
 import androidx.compose.runtime.Composable
@@ -15,7 +17,6 @@ import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun DialogSheetScopedViewModel(
     visible: Boolean,
@@ -32,12 +33,12 @@ fun DialogSheetScopedViewModel(
     var owner by remember { mutableStateOf<ViewModelStoreOwner?>(null) }
 
     LaunchedEffect(visible, scopeId) {
-        if(visible && owner == null) {
+        if (visible && owner == null) {
             owner = object : ViewModelStoreOwner {
                 override val viewModelStore: ViewModelStore
                     get() = registry.getOrCreate(scopeId)
             }
-        } else if(!visible && owner != null) {
+        } else if (!visible && owner != null) {
             registry.clear(scopeId)
             owner = null
         }

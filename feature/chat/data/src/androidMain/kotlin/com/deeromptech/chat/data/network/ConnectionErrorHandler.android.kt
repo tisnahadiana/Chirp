@@ -19,7 +19,6 @@ actual class ConnectionErrorHandler {
             is UnknownHostException,
             is SSLException,
             is EOFException -> ConnectionState.ERROR_NETWORK
-
             else -> ConnectionState.ERROR_UNKNOWN
         }
     }
@@ -35,7 +34,6 @@ actual class ConnectionErrorHandler {
             is SocketException,
             is UnknownHostException,
             is EOFException -> true
-
             else -> false
         }
     }

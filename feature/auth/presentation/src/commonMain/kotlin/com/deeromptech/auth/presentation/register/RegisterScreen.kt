@@ -45,7 +45,7 @@ fun RegisterRoot(
     val snackbarHostState = remember { SnackbarHostState() }
 
     ObserveAsEvents(viewModel.events) { event ->
-        when (event) {
+        when(event) {
             is RegisterEvent.Success -> {
                 onRegisterSuccess(event.email)
             }
@@ -55,7 +55,7 @@ fun RegisterRoot(
     RegisterScreen(
         state = state,
         onAction = { action ->
-            when (action) {
+            when(action) {
                 is RegisterAction.OnLoginClick -> onLoginClick()
                 else -> Unit
             }
