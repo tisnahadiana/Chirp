@@ -75,18 +75,6 @@ This structure promotes scalability, maintainability, and testability.
 - Firebase (Android)
 - Room Database (Android)
 
----
-
-## Technology Stack
-
-- Kotlin Multiplatform
-- Compose Multiplatform
-- Kotlin Coroutines & Flow
-- Clean Architecture
-- WebSocket
-- Firebase
-- Room Database
-
 ## How This Repository Is Used in My Portfolio
 
 This repository is included in my portfolio to:
