@@ -84,8 +84,8 @@ This structure promotes scalability, maintainability, and testability.
 - Kotlin Coroutines & Flow
 - Clean Architecture
 - WebSocket
-- Firebase (Android)
-- Room Database (Android)
+- Firebase
+- Room Database
 
 ## How This Repository Is Used in My Portfolio
 
