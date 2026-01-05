@@ -1,48 +1,116 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Desktop (JVM).
+# Chirp – Kotlin Multiplatform Learning Project  
+### Building Industry-Grade Compose Multiplatform Apps for Android & iOS
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+Chirp is a **Kotlin Multiplatform (KMP)** real-time messaging application targeting **Android and iOS**, built using **Compose Multiplatform**.
 
-* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+This repository is a **course-based learning project** developed as part of the class  
+**“Building Industry-Grade Compose Multiplatform Apps for Android & iOS”**.
 
-### Build and Run Android Application
-
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
-
-### Build and Run Desktop (JVM) Application
-
-To build and run the development version of the desktop app, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:run
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:run
-  ```
-
-### Build and Run iOS Application
-
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+The primary goal of this project is to **study and understand how industry-grade mobile applications are built**, particularly in a **cross-platform Kotlin Multiplatform environment**.
 
 ---
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+## Important Notice
+
+> The implementation in this repository closely follows the original course material and reference implementation.  
+> This project is used strictly for **learning, exploration, and portfolio demonstration purposes**, to showcase understanding of architecture, tooling, and cross-platform development concepts.
+
+---
+
+## Project Objectives
+
+This project is intended to demonstrate:
+
+- Hands-on experience with **Kotlin Multiplatform (KMP)**
+- Understanding of **Compose Multiplatform** for shared UI
+- Familiarity with **Clean Architecture** in a real-world codebase
+- Experience working with **multi-module projects**
+- Ability to navigate, build, and run complex mobile applications
+
+---
+
+## Supported Platforms
+
+- Android (Compose Multiplatform)
+- iOS (Compose Multiplatform with SwiftUI entry point)
+- Desktop (JVM) – *not yet implemented in this repository*
+
+---
+
+## Architecture Overview
+
+The project follows **Clean Architecture principles**, with clear separation between:
+
+- **Presentation Layer**  
+  Compose Multiplatform UI and state-driven state management
+
+- **Domain Layer**  
+  Business logic and use cases shared across platforms
+
+- **Data Layer**  
+  Networking, persistence, and platform-specific integrations
+
+This structure promotes scalability, maintainability, and testability.
+
+---
+
+## Features Covered
+
+- User authentication (JWT-based)
+- Real-time messaging using WebSocket
+- Shared business logic across Android and iOS
+- Push notifications using Firebase (Android)
+- Local persistence using Room (Android)
+- Platform-specific integrations for mobile platforms
+
+---
+
+## Technology Stack
+
+- Kotlin Multiplatform
+- Compose Multiplatform
+- Kotlin Coroutines & Flow
+- Clean Architecture
+- WebSocket
+- Firebase (Android)
+- Room Database (Android)
+
+---
+
+## Technology Stack
+
+- Kotlin Multiplatform
+- Compose Multiplatform
+- Kotlin Coroutines & Flow
+- Clean Architecture
+- WebSocket
+- Firebase (Android)
+- Room Database (Android)
+
+## How This Repository Is Used in My Portfolio
+
+This repository is included in my portfolio to:
+
+- Demonstrate exposure to industry-grade mobile architecture
+- Show familiarity with Kotlin Multiplatform projects
+- Provide a concrete reference for technical discussions during interviews
+- Future improvements and personal customizations may be added incrementally.
+
+## Planned Improvements
+
+- Desktop (JVM) support
+- Additional error handling and logging
+- Minor refactoring for improved readability
+- Custom feature experiments beyond the course scope
+
+## Course Reference
+
+This project follows the course material and reference implementation by Philip Plackner.
+
+Original reference repository:
+https://github.com/philipplackner/Chirp
+
+## Disclaimer
+
+This project is intended for educational and demonstration purposes only.
+All original concepts and architecture belong to the course author.
