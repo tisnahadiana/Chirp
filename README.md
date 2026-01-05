@@ -32,7 +32,7 @@ This project is intended to demonstrate:
 ## Supported Platforms
 
 - Android (Compose Multiplatform)
-- iOS (Compose Multiplatform with SwiftUI entry point)
+- iOS (Compose Multiplatform with Swift entry point)
 - Desktop (JVM) – *not yet implemented in this repository*
 
 ---
