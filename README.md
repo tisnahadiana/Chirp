@@ -3,6 +3,15 @@
 
 Chirp is a **Kotlin Multiplatform (KMP)** real-time messaging application targeting **Android and iOS**, built using **Compose Multiplatform**.
 
+## Application Preview
+
+### Android
+<img width="1168" height="738" alt="App Screenshot Chirp Android" src="https://github.com/user-attachments/assets/2e72485d-baaf-42e0-9e7d-9500f25ea6ab" />
+
+### iOS
+<img width="1179" height="795" alt="App Screenshot Chirp IOS" src="https://github.com/user-attachments/assets/61319a83-fee8-425a-9a61-7b8d588a37d6" />
+
+
 This repository is a **course-based learning project** developed as part of the class  
 **“Building Industry-Grade Compose Multiplatform Apps for Android & iOS”**.
 
